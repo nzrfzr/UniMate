@@ -14,7 +14,9 @@ void main() async {
 
   // Initialize SQLite Database Factory for Desktop & Web preview
   if (kIsWeb) {
-    databaseFactory = databaseFactoryFfiWeb;
+    try {
+      databaseFactory = databaseFactoryFfiWeb;
+    } catch (_) {}
   } else if (Platform.isWindows || Platform.isLinux) {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;

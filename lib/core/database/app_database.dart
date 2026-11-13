@@ -23,21 +23,35 @@ class AppDatabase {
 
   Future<Database> _initDB(String filePath) async {
     if (kIsWeb) {
-      databaseFactory = databaseFactoryFfiWeb;
+      try {
+        databaseFactory = databaseFactoryFfiWeb;
+      } catch (_) {}
     } else if (Platform.isWindows || Platform.isLinux) {
       sqfliteFfiInit();
       databaseFactory = databaseFactoryFfi;
     }
 
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, filePath);
+    try {
+      final dbPath = await getDatabasesPath();
+      final path = join(dbPath, filePath);
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDB,
-      onConfigure: _onConfigure,
-    );
+      return await openDatabase(
+        path,
+        version: 1,
+        onCreate: _createDB,
+        onConfigure: _onConfigure,
+      );
+    } catch (e) {
+      // Graceful fallback for Web environments (e.g. In-Memory SQLite)
+      if (kIsWeb) {
+        return await openDatabase(
+          inMemoryDatabasePath,
+          version: 1,
+          onCreate: _createDB,
+        );
+      }
+      rethrow;
+    }
   }
 
   Future<void> _onConfigure(Database db) async {
