@@ -32,3 +32,4 @@ class AppColors {
   static const Color success = Color(0xFF50B187);
   static const Color white = Color(0xFFFFFFFF);
 }
+

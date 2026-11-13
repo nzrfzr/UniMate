@@ -127,3 +127,4 @@ final tasksProvider = StateNotifierProvider<TasksNotifier, AsyncValue<List<TaskI
   final db = ref.watch(databaseProvider);
   return TasksNotifier(db);
 });
+

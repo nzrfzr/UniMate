@@ -58,3 +58,4 @@ class AppTypography {
     color: AppColors.white,
   );
 }
+
